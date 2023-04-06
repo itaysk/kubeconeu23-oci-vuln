@@ -1,5 +1,15 @@
 #! /bin/bash
 
+export DEST_PUBKEY='-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtkuIARvuFzS+vT6B7UJ3
+dIz+/WWNQ5pAQukN3vf3TP5Ik60Rfai9LKgeoXT+znhyAFg8T5BamTtwiiWTb3BQ
+upDHWbUh2VGr8k+8BDgaXSGtwCxqDsJniVUSkD8MBuJ89nsbT5miEVjfoDtNgN6E
+5qXD9bsmkDcTqJZQr2KQHrSz7qceP8oG5YSI5UZ2R2KCD2Nlwy8yNwptnsko9lpD
+xvpyDtyJj8QdALNhcPSBP/fez76TFfTvjet37Miah8x4IPrz2Cd6PzQCVk/0Qk3R
+jTQFP8p7s86QWNoF7mSqb/1s7kN3mfbyQvpEOuqipAIiMqdalHgyqaHbIgzlZfEe
+vQIDAQAB
+-----END PUBLIC KEY-----'
+
 kubectl get all
 
 # policy - only signed images
