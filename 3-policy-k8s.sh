@@ -19,9 +19,6 @@ envsubst <policy-verify.yaml.tmpl | kubectl create -f -
 kubectl run test --image $DEST_IMAGE
 kubectl get pod -w
 kubectl delete pod test
-# fails because of unsigned image
-kubectl run test --image $DEST_REPO:unsigned
-kubectl describe clusterpolicy verify-image
 
 # policy - no critical vulnerabilities
 envsubst <policy-vuln.yaml.tmpl
@@ -34,7 +31,14 @@ trivy image $DEST_IMAGE --format sarif --severity LOW | regctl artifact put --su
   --artifact-type application/sarif+json --file-media-type application/sarif+json --annotation createdby=trivy
 # fails because of sbom verification
 kubectl run test --image $DEST_IMAGE
+# use fixed image
+regctl tag list $DEST_REPO | grep 'fixed'
+regctl artifact tree $DEST_REPO:fixed
+kubectl run test --image $DEST_REPO:fixed
+
 kubectl describe clusterpolicy no-vulns
+
+# policy - no GPL dependencies in SBOM
 
 
 
