@@ -1,0 +1,21 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-image
+spec:
+  validationFailureAction: Enforce
+  rules:
+    - name: verify-image
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - imageReferences:
+        - "$SOURCE_REPO:*"
+        attestors:
+        - entries:
+          - keys:
+              publicKeys: |-
+                $DEST_PUBKEY
