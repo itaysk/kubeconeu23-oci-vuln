@@ -32,5 +32,4 @@ regctl artifact list $SOURCE_IMAGE --filter-artifact-type application/vnd.cyclon
 trivy image $SOURCE_IMAGE --sbom-sources oci
 
 # generate SARIF vulnerability report and push to registry
-trivy image $SOURCE_IMAGE --format sarif | regctl artifact put --subject $SOURCE_IMAGE \
-  --artifact-type application/sarif+json --file-media-type application/sarif+json --annotation createdby=trivy
+trivy image $SOURCE_IMAGE --format sarif | trivy referrer put --subject $SOURCE_IMAGE --annotation createdby=trivy
