@@ -8,28 +8,23 @@ echo $SOURCE_IMAGE
 # demonstrate Trivy vulnerability scan
 trivy image $SOURCE_IMAGE
 
-# generate SBOM
+# scan SBOM
 trivy image $SOURCE_IMAGE --format cyclonedx
-# Push SBOM to registry
+trivy image $SOURCE_IMAGE --format cyclonedx >/tmp/my.cyclonedx.json
+trivy sbom /tmp/my.cyclonedx.json
+
+# push SBOM
 #trivy plugin install git@github.com:aquasecurity/trivy-plugin-referrer.git
-trivy image $SOURCE_IMAGE --format cyclonedx | trivy referrer put --annotation createdby=trivy
-# another SBOM
-trivy image $SOURCE_IMAGE --format spdx-json | trivy referrer put --annotation createdby=trivy
-regctl artifact tree $SOURCE_IMAGE
+trivy image $SOURCE_IMAGE --format cyclonedx | trivy referrer put
+trivy referrer list $SOURCE_IMAGE
 
-# demonstrate referrers API fallback tag
-regctl tag list $SOURCE_IMAGE
-regctl manifest get "$SOURCE_REPO":TODO
+# more artifacts
+trivy image $SOURCE_IMAGE --format spdx-json | trivy referrer put
+trivy image $SOURCE_IMAGE --format sarif | trivy referrer put --subject $SOURCE_IMAGE
+trivy referrer list $SOURCE_IMAGE
 
-# demonstrate process of fetching SBOM from registry
-regctl artifact list $SOURCE_IMAGE --filter-artifact-type application/vnd.cyclonedx+json --filter-annotation createdby=trivy
-regctl artifact get $SOURCE_IMAGE@TODO
-# fetch SBOM from registry
-regctl artifact list $SOURCE_IMAGE --filter-artifact-type application/vnd.cyclonedx+json --format '{{ (index .Descriptors 0).Digest  }}' \
-  | xargs -I {} regctl artifact get $SOURCE_IMAGE@{}
+# get a specific artifact
+trivy referrer get $SOURCE_IMAGE --type application/vnd.cyclonedx+json
 
-# demonstrate Trivy finds SBOM in registry and uses it for vulnerability scan
+# Trivy discovers SBOM in registry
 trivy image $SOURCE_IMAGE --sbom-sources oci
-
-# generate SARIF vulnerability report and push to registry
-trivy image $SOURCE_IMAGE --format sarif | trivy referrer put --subject $SOURCE_IMAGE --annotation createdby=trivy
