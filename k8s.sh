@@ -2,7 +2,6 @@
 
 
 kind create cluster
-kubectl create configmap keys -n kyverno --from-literal=notary=$DEST_PUBKEY 
 #kubectl create -f https://github.com/kyverno/kyverno/releases/download/v1.10.0-alpha.1/install.yaml
 kubectl create -f https://gist.githubusercontent.com/Vishal-Chdhry/73ffec4b0ac8a0ab2c267c09a39f790d/raw/383a746a21b279af2ae7cbd4bb8389c233fe9a14/notation-attestation-install.yaml
 kubectl set image deploy/kyverno-admission-controller -n kyverno kyverno=ghcr.io/vishal-chdhry/kyverno-notary-attestations:demo1
@@ -17,5 +16,6 @@ kubectl create secret docker-registry regcred \
   --docker-password="$DEST_REGISTRY_PASS"
 kubectl patch deployment kyverno-background-controller -n kyverno --type json --patch '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--imagePullSecrets=regcred" }]'
 kubectl patch deployment kyverno-admission-controller -n kyverno --type json --patch '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--imagePullSecrets=regcred" }]'
+kubectl create configmap keys -n kyverno --from-literal=notary=$DEST_PUBKEY 
 
 kubectl get po -n kyverno
