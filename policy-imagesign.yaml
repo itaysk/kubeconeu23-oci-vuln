@@ -1,0 +1,27 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: policy-imagesign
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: policy-imagesign
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      context:
+      - name: keys
+        configMap:
+          name: keys
+          namespace: kyverno
+      verifyImages:
+      - type: Notary
+        imageReferences:
+        - "registry.twnt.co/*"
+        attestors:
+          - entries:
+              - keys:
+                  publicKeys: "{{ keys.data.notary }}"
