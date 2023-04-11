@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: policy-licenses
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: policy-licenses
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - type: Notary
+        imageReferences:
+          - "registry.twnt.co/*"
+        attestations:
+          - predicateType: application/vnd.cyclonedx
+            attestors:
+            - entries:
+              - keys:
+                  publicKeys: "{{ keys.data.notary }}"
+            conditions:
+              - all:
+                - key: "{{ bomFormat }}"
+                  operator: Equals
+                  value: "CycloneDX"
+                - key: "{{ time_since('','{{metadata.timestamp}}','') }}"
+                  operator: LessThanOrEquals
+                  value: "7d"
+                - key: "{{ components[].licenses[].expression }}"
+                  operator: AllNotIn
+                  value: ["GPL-2.0", "GPL-3.0"]

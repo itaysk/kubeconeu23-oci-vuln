@@ -1,0 +1,34 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: policy-vulnerabilities
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: policy-vulnerabilities
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      context:
+      - name: keys
+        configMap:
+          name: keys
+          namespace: kyverno
+      verifyImages:
+      - type: Notary
+        imageReferences:
+          - "registry.twnt.co/*"
+        attestations:
+          - predicateType: application/sarif+json
+            attestors:
+            - entries:
+                - keys:
+                    publicKeys: "{{ keys.data.notary }}"
+            conditions:
+              - all:
+                - key: "{{ runs[].tool.driver.rules[].properties.tags[] }}"
+                  operator: AllNotIn
+                  value: ["CRITICAL", "HIGH"]
