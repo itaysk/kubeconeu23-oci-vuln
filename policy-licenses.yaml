@@ -12,6 +12,11 @@ spec:
         - resources:
             kinds:
               - Pod
+      context:
+      - name: keys
+        configMap:
+          name: keys
+          namespace: kyverno
       verifyImages:
       - type: Notary
         imageReferences:
