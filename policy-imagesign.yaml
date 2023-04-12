@@ -22,6 +22,6 @@ spec:
         imageReferences:
         - "registry.twnt.co/*"
         attestors:
-          - entries:
-              - keys:
-                  publicKeys: "{{ keys.data.notary }}"
+        - entries:
+          - certificates:
+              cert: "{{ keys.data.notary }}"

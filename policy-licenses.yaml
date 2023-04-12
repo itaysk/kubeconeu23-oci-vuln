@@ -25,8 +25,8 @@ spec:
           - predicateType: application/vnd.cyclonedx
             attestors:
             - entries:
-              - keys:
-                  publicKeys: "{{ keys.data.notary }}"
+              - certificates:
+                  cert: "{{ keys.data.notary }}"
             conditions:
               - all:
                 - key: "{{ bomFormat }}"

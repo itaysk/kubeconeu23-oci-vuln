@@ -10,6 +10,6 @@ kubectl set image deploy/kyverno-admission-controller -n kyverno kyverno="ghcr.i
 kubectl create secret docker-registry -n kyverno regcred --docker-server="$DEST_REGISTRY" --docker-username="$DEST_REGISTRY_USER" --docker-password="$DEST_REGISTRY_PASS"
 kubectl patch deployment kyverno-background-controller -n kyverno --type json --patch '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--imagePullSecrets=regcred" }]'
 kubectl patch deployment kyverno-admission-controller -n kyverno --type json --patch '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--imagePullSecrets=regcred" }]'
-kubectl create configmap keys -n kyverno --from-literal=notary=$DEST_PUBKEY
+kubectl create configmap keys -n kyverno --from-literal=notary=$DEST_CERT
 sleep 5
 kubectl get po -n kyverno
