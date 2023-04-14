@@ -22,7 +22,7 @@ trivy image $SOURCE_IMAGE --format sarif | trivy referrer put
 
 # list referrering artifacts
 # regctl artifact list $SOURCE_IMAGE
-trivy referrer list $SOURCE_IMAGE
+trivy referrer list $SOURCE_IMAGE --format table
 
 # get contents of specific referring artifact
 # regctl artifact list $SOURCE_IMAGE --filter-artifact-type application/vnd.cyclonedx+json --filter-annotation createdby=trivy | get latest one...
