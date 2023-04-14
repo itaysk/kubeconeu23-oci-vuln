@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export SOURCE_REGISTRY=ghcr.io
-export SOURCE_REPO=$SOURCE_REGISTRY/toddysm/cssc-pipeline/flasksample
-export SOURCE_IMAGE=$SOURCE_REPO:kubeconeu-demo-v1
 echo $SOURCE_IMAGE
 
 # demonstrate Trivy vulnerability scan
