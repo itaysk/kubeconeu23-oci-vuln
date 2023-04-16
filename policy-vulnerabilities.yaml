@@ -29,6 +29,9 @@ spec:
                   cert: "{{ keys.data.notary }}"
             conditions:
               - all:
+                - key: "{{ runs[].tool.driver.name }}"
+                  operator: Equals
+                  value: ["Trivy"]
                 - key: "{{ runs[].tool.driver.rules[].properties.tags[] }}"
                   operator: AllNotIn
                   value: ["CRITICAL", "HIGH"]
