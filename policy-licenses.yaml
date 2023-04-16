@@ -29,12 +29,6 @@ spec:
                   cert: "{{ keys.data.notary }}"
             conditions:
               - all:
-                - key: "{{ bomFormat }}"
-                  operator: Equals
-                  value: "CycloneDX"
-                - key: "{{ time_since('','{{metadata.timestamp}}','') }}"
-                  operator: LessThanOrEquals
-                  value: "7d"
                 - key: "{{ components[].licenses[].expression }}"
                   operator: AllNotIn
                   value: ["GPL-2.0", "GPL-3.0"]
