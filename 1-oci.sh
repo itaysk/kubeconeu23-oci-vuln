@@ -2,15 +2,15 @@
 
 echo $SOURCE_IMAGE
 
-# demonstrate Trivy vulnerability scan
+# regular image scan
 trivy image $SOURCE_IMAGE
 
-# scan SBOM
+# image scan using SBOM
 trivy image $SOURCE_IMAGE --format cyclonedx
 trivy image $SOURCE_IMAGE --format cyclonedx >/tmp/my.cyclonedx.json
 trivy sbom /tmp/my.cyclonedx.json
 
-# push SBOM
+# store SBOM in registry
 # trivy image $SOURCE_IMAGE --format cyclonedx | regctl artifact put --subject $SOURCE_IMAGE \
 #   --artifact-type application/vnd.cyclonedx+json --file-media-type application/vnd.cyclonedx+json \
 #   --annotation createdby=trivy --annotation created=$(date -Iseconds)
@@ -29,5 +29,5 @@ trivy referrer list $SOURCE_IMAGE --format table
 # regctl artifact get $SOURCE_IMAGE@sha256:...
 trivy referrer get $SOURCE_IMAGE --type cyclonedx
 
-# Trivy discovers SBOM in registry
+# image scan using SBOM from registry
 trivy image $SOURCE_IMAGE --sbom-sources oci
